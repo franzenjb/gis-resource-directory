@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GIS & Disaster Response Resource Directory</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Sans+Pro:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --arc-red: #ED1B2E;
+    --arc-black: #1a1a1a;
+    --arc-gray-900: #2d2d2d;
+    --arc-gray-700: #4a4a4a;
+    --arc-gray-500: #737373;
+    --arc-gray-300: #a3a3a3;
+    --arc-gray-100: #e5e5e5;
+    --arc-cream: #f7f5f2;
+    --arc-white: #ffffff;
+    --arc-info: #1e4a6d;
+    --font-headline: 'Libre Baskerville', Georgia, serif;
+    --font-body: 'Source Sans Pro', 'Helvetica Neue', sans-serif;
+    --font-data: 'IBM Plex Mono', Consolas, monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--arc-cream);
+    color: var(--arc-gray-900);
+    line-height: 1.5;
+  }
+
+  /* Header */
+  header {
+    background: var(--arc-white);
+    border-bottom: 3px solid var(--arc-black);
+    padding: 32px 0 24px;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 8px;
+  }
+
+  .red-cross-mark {
+    width: 32px;
+    height: 32px;
+    position: relative;
+  }
+
+  .red-cross-mark::before,
+  .red-cross-mark::after {
+    content: '';
+    position: absolute;
+    background: var(--arc-red);
+  }
+
+  .red-cross-mark::before {
+    width: 10px;
+    height: 32px;
+    left: 11px;
+    top: 0;
+  }
+
+  .red-cross-mark::after {
+    width: 32px;
+    height: 10px;
+    top: 11px;
+    left: 0;
+  }
+
+  .org-label {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--arc-red);
+  }
+
+  h1 {
+    font-family: var(--font-headline);
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--arc-black);
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-size: 18px;
+    color: var(--arc-gray-500);
+    font-weight: 300;
+  }
+
+  .timestamp {
+    font-family: var(--font-data);
+    font-size: 12px;
+    color: var(--arc-gray-300);
+    margin-top: 12px;
+  }
+
+  /* Filter bar */
+  .filter-bar {
+    background: var(--arc-white);
+    border-bottom: 1px solid var(--arc-gray-100);
+    padding: 16px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .filter-inner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .filter-label {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--arc-gray-500);
+    margin-right: 4px;
+  }
+
+  .filter-btn {
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 6px 16px;
+    border: 1px solid var(--arc-gray-300);
+    border-radius: 20px;
+    background: var(--arc-white);
+    color: var(--arc-gray-700);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .filter-btn:hover {
+    border-color: var(--arc-gray-700);
+    color: var(--arc-black);
+  }
+
+  .filter-btn.active {
+    background: var(--arc-black);
+    border-color: var(--arc-black);
+    color: var(--arc-white);
+  }
+
+  .search-box {
+    margin-left: auto;
+    font-family: var(--font-body);
+    font-size: 14px;
+    padding: 6px 16px;
+    border: 1px solid var(--arc-gray-300);
+    border-radius: 20px;
+    background: var(--arc-white);
+    color: var(--arc-gray-900);
+    width: 220px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .search-box:focus {
+    border-color: var(--arc-red);
+  }
+
+  .search-box::placeholder {
+    color: var(--arc-gray-300);
+  }
+
+  /* Stats bar */
+  .stats-bar {
+    display: flex;
+    gap: 48px;
+    padding: 32px 0;
+    border-bottom: 1px solid var(--arc-gray-100);
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .stat-number {
+    font-family: var(--font-data);
+    font-size: 32px;
+    font-weight: 500;
+    color: var(--arc-black);
+    line-height: 1;
+  }
+
+  .stat-number.red {
+    color: var(--arc-red);
+  }
+
+  .stat-label {
+    font-size: 13px;
+    color: var(--arc-gray-500);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 4px;
+  }
+
+  /* Sections */
+  .section {
+    padding: 48px 0 24px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .section-number {
+    font-family: var(--font-data);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--arc-red);
+  }
+
+  h2 {
+    font-family: var(--font-headline);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--arc-black);
+  }
+
+  .section-desc {
+    font-size: 16px;
+    color: var(--arc-gray-500);
+    margin-bottom: 24px;
+    max-width: 720px;
+  }
+
+  .section-rule {
+    width: 40px;
+    height: 3px;
+    background: var(--arc-red);
+    margin-bottom: 24px;
+  }
+
+  /* Cards grid */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 20px;
+  }
+
+  .card {
+    background: var(--arc-white);
+    border: 1px solid var(--arc-gray-100);
+    padding: 24px;
+    transition: box-shadow 0.2s ease;
+    position: relative;
+  }
+
+  .card:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  .card-tag {
+    font-family: var(--font-data);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--arc-gray-500);
+    margin-bottom: 8px;
+  }
+
+  .card h3 {
+    font-family: var(--font-headline);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--arc-black);
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .card p {
+    font-size: 14px;
+    color: var(--arc-gray-700);
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+
+  .card-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .card-link {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--arc-info);
+    text-decoration: none;
+    padding: 4px 12px;
+    border: 1px solid var(--arc-info);
+    border-radius: 3px;
+    transition: all 0.15s;
+  }
+
+  .card-link:hover {
+    background: var(--arc-info);
+    color: var(--arc-white);
+  }
+
+  .card-link.primary {
+    background: var(--arc-red);
+    border-color: var(--arc-red);
+    color: var(--arc-white);
+  }
+
+  .card-link.primary:hover {
+    background: #c41e3a;
+    border-color: #c41e3a;
+  }
+
+  /* Highlight card */
+  .card.highlight {
+    border-left: 3px solid var(--arc-red);
+  }
+
+  /* Footer */
+  footer {
+    border-top: 3px solid var(--arc-black);
+    padding: 32px 0;
+    margin-top: 48px;
+    background: var(--arc-white);
+  }
+
+  .footer-text {
+    font-size: 13px;
+    color: var(--arc-gray-500);
+  }
+
+  .footer-text a {
+    color: var(--arc-gray-700);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    h1 { font-size: 28px; }
+    .stats-bar { gap: 24px; flex-wrap: wrap; }
+    .cards { grid-template-columns: 1fr; }
+    .search-box { width: 100%; margin-left: 0; margin-top: 8px; }
+    .filter-inner { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="header-top">
+      <div class="red-cross-mark"></div>
+      <span class="org-label">American Red Cross</span>
+    </div>
+    <h1>GIS & Disaster Response<br>Resource Directory</h1>
+    <div class="subtitle">Curated geospatial tools, data sources, and partner organizations</div>
+    <div class="timestamp">Updated 2026-02-25</div>
+  </div>
+</header>
+
+<div class="filter-bar">
+  <div class="container">
+    <div class="filter-inner">
+      <span class="filter-label">Filter</span>
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="disaster">Disaster Response</button>
+      <button class="filter-btn" data-filter="data">Data Sources</button>
+      <button class="filter-btn" data-filter="tools">Tools & Platforms</button>
+      <button class="filter-btn" data-filter="education">Education & Careers</button>
+      <button class="filter-btn" data-filter="volunteer">Volunteer & Community</button>
+      <input type="text" class="search-box" placeholder="Search resources..." id="searchBox">
+    </div>
+  </div>
+</div>
+
+<main class="container">
+
+  <!-- Stats -->
+  <div class="stats-bar">
+    <div class="stat">
+      <span class="stat-number red" id="resourceCount">24</span>
+      <span class="stat-label">Resources</span>
+    </div>
+    <div class="stat">
+      <span class="stat-number">6</span>
+      <span class="stat-label">Categories</span>
+    </div>
+    <div class="stat">
+      <span class="stat-number">12</span>
+      <span class="stat-label">Partner Orgs</span>
+    </div>
+  </div>
+
+  <!-- Section 1: Disaster Response Partners -->
+  <div class="section" id="disaster-response">
+    <div class="section-header">
+      <span class="section-number">01</span>
+      <h2>Disaster Response Partners</h2>
+    </div>
+    <p class="section-desc">Federal agencies and nonprofits that provide geospatial data, imagery, and coordination during disasters.</p>
+    <div class="section-rule"></div>
+    <div class="cards">
+
+      <div class="card highlight" data-category="disaster">
+        <div class="card-tag">Federal / Coordination</div>
+        <h3>FEMA Geospatial Resource Center</h3>
+        <p>Shared hub for disaster response data, maps, and apps. Aggregates content from FEMA, HHS, Census, NASA, and other partners. Decision-makers at every level access this before, during, and after disasters. Hosts Geospatial Coordination Calls during large-scale events.</p>
+        <div class="card-links">
+          <a href="https://gis-fema.hub.arcgis.com/" target="_blank" class="card-link primary">Resource Center</a>
+          <a href="https://gis-fema.hub.arcgis.com/pages/coordination-calls" target="_blank" class="card-link">Coordination Calls</a>
+        </div>
+      </div>
+
+      <div class="card" data-category="disaster">
+        <div class="card-tag">Nonprofit / GIS Adoption</div>
+        <h3>NAPSG Foundation</h3>
+        <p>National Alliance for Public Safety GIS. A 501(c)(3) nonprofit since 2005 helping federal, tribal, state, and local public safety agencies adopt GIS as a tool to protect citizens. Bridges the gap between technology and agency readiness.</p>
+        <div class="card-links">
+          <a href="https://www.napsgfoundation.org/" target="_blank" class="card-link primary">Website</a>
+        </div>
+      </div>
+
+      <div class="card highlight" data-category="disaster tools">
+        <div class="card-tag">Esri / Free Support</div>
+        <h3>Esri Disaster Response Program</h3>
+        <p>Esri provides free GIS technology and disaster response expertise when an organization's capacity is exceeded. Your escalation path when a disaster is bigger than your team can map alone. Part of Esri's corporate citizenship initiative.</p>
+        <div class="card-links">
+          <a href="https://www.esri.com/en-us/disaster-response/overview" target="_blank" class="card-link primary">DRP Portal</a>
+          <a href="https://www.esri.com/en-us/disaster-response/get-help/request" target="_blank" class="card-link">Request Help</a>
+        </div>
+      </div>
+
+      <div class="card" data-category="disaster data">
+        <div class="card-tag">NASA / Satellite Data</div>
+        <h3>NASA Disasters Mapping Portal</h3>
+        <p>Near real-time and disaster-specific data products in GIS format. Satellite imagery, flood extents, fire perimeters, and more. Downloads directly in GIS-ready formats for ArcGIS workflows. Supports prediction, preparation, response, and recovery.</p>
+        <div class="card-links">
+          <a href="https://maps.disasters.nasa.gov/" target="_blank" class="card-link primary">Mapping Portal</a>
+          <a href="https://appliedsciences.nasa.gov/what-we-do/disasters" target="_blank" class="card-link">Program Info</a>
+        </div>
+      </div>
+
+      <div class="card" data-category="disaster volunteer">
+        <div class="card-tag">Volunteer / GIS Missions</div>
+        <h3>URISA GISCorps</h3>
+        <p>Short-term volunteer GIS services for organizations and communities in need worldwide. Hundreds of missions since 2003 across 80+ countries. Humanitarian relief, public health, conservation. Potential surge capacity for Red Cross disaster events.</p>
+        <div class="card-links">
+          <a href="https://www.giscorps.org/" target="_blank" class="card-link primary">GISCorps</a>
+          <a href="https://www.giscorps.org/missions/" target="_blank" class="card-link">Active Missions</a>
+        </div>
+      </div>
+
+      <div class="card" data-category="disaster data">
+        <div class="card-tag">Federal / Emergency Imagery</div>
+        <h3>USGS Emergency Response</h3>
+        <p>Rapid access to geospatial imagery and products before, during, and after disasters. Aerial and satellite imagery for pre/post disaster comparisons. Maintains tools and dashboards specifically for the response community.</p>
+        <div class="card-links">
+          <a href="https://www.usgs.gov/programs/emergency-response" target="_blank" class="card-link primary">USGS Emergency</a>
+          <a href="https://www.usgs.gov/tools" target="_blank" class="card-link">Tools & Dashboards</a>
+        </div>
+      </div>
+
+      <div class="card" data-category="disaster data">
+        <div class="card-tag">Federal / Intelligence</div>
+        <h3>National Geospatial-Intelligence Agency</h3>
+        <p>World-class geospatial intelligence for military, intelligence, and first responders. Also supports humanitarian assistance and disaster relief. Resources include aeronautical charts, declassified satellite imagery, historical imagery, and open-source GitHub tools.</p>
+        <div class="card-links">
+          <a href="https://www.nga.mil/" target="_blank" class="card-link primary">NGA</a>
+          <a href="https://github.com/ngageoint" target="_blank" class="card-link">GitHub</a>
+          <a href="https://www.nga.mil/resources/Humanitarian_Assistance_Disaster_Relief.html" target="_blank" class="card-link">HADR</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Section 2: GIS Platforms & Tools -->
+  <div class="section" id="platforms">
+    <div class="section-header">
+      <span class="section-number">02</span>
+      <h2>GIS Platforms & Tools</h2>
+    </div>
+    <p class="section-desc">Core mapping platforms and operational tools used in disaster response and geospatial analysis.</p>
+    <div class="section-rule"></div>
+    <div class="cards">
+
+      <div class="card highlight" data-category="tools">
+        <div class="card-tag">Platform / Enterprise</div>
+        <h3>Esri ArcGIS</h3>
+        <p>Global market leader in GIS software. Red Cross and CAP both have enterprise licenses for ArcGIS Online and ArcPro. Esri Academy available for training. The backbone of most disaster response mapping operations.</p>
+        <div class="card-links">
+          <a href="https://www.esri.com/" target="_blank" class="card-link primary">Esri</a>
+          <a href="https://www.esri.com/training/" target="_blank" class="card-link">Academy</a>
+          <a href="https://www.esri.com/en-us/industries/k-12-education/overview" target="_blank" class="card-link">K-12</a>
+        </div>
+      </div>
+
+      <div class="card" data-category="tools">
+        <div class="card-tag">CAP / Aerial Imagery</div>
+        <h3>CAP Imagery Viewer</h3>
+        <p>Interactive mapping application for Civil Air Patrol aerial imagery. CAP flies damage assessment missions after disasters — this imagery can complement Red Cross disaster response mapping with aerial perspectives.</p>
+        <div class="card-links">
+          <a href="https://gis.cap.gov/pages/cap-imagery-viewer" target="_blank" class="card-link primary">Imagery Viewer</a>
+        </div>
+      </div>
+
+      <div class="card" data-category="tools disaster">
+        <div class="card-tag">CAP / Emergency Ops</div>
+        <h3>CAP Disaster Response Portal</h3>
+        <p>Tool supporting emergency response and damage assessments. Used by CAP for coordinating aerial missions and sharing imagery with partner agencies during disaster events.</p>
+        <div class="card-links">
+          <a href="https://gis.cap.gov/pages/cap-disaster-response-portal" target="_blank" class="card-link primary">Response Portal</a>
+        </div>
+      </div>
+
+      <div class="card" data-category="tools">
+        <div class="card-tag">CAP / Locator</div>
+        <h3>CAP Unit Locator</h3>
+        <p>Map-based tool to find Civil Air Patrol units by location. Useful for identifying nearby CAP resources that could support disaster response operations.</p>
+        <div class="card-links">
+          <a href="https://hosted.where2getit.com/civilairpatrol/" target="_blank" class="card-link primary">Unit Locator</a>
+        </div>
+      </div>
+
+      <div class="card" data-category="tools">
+        <div class="card-tag">CAP / Portal</div>
+        <h3>CAP Geospatial Hub</h3>
+        <p>CAP's internal ArcGIS Online organizational portal for creating and sharing geospatial products. Members-only access for creating maps, apps, and data layers.</p>
+        <div class="card-links">
+          <a href="https://gis.cap.gov/" target="_blank" class="card-link primary">Geospatial Hub</a>
+          <a href="https://cap-gis.maps.arcgis.com/" target="_blank" class="card-link">ArcGIS Portal</a>
+        </div>
+      </div>
+
+      <div class="card" data-category="tools data">
+        <div class="card-tag">NGA / Open Data</div>
+        <h3>NGA Products & Publications</h3>
+        <p>Aeronautical charts, CIA maps available to the public, declassified satellite imagery, historical imagery, and GEOINT doctrine. Multiple open-source GitHub repositories with geospatial tools.</p>
+        <div class="card-links">
+          <a href="https://www.nga.mil/resources/aeronautical_charts_702.html" target="_blank" class="card-link">Aero Charts</a>
+          <a href="https://github.com/ngageoint" target="_blank" class="card-link">GitHub Tools</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Section 3: Data Sources -->
+  <div class="section" id="data">
+    <div class="section-header">
+      <span class="section-number">03</span>
+      <h2>Data Sources</h2>
+    </div>
+    <p class="section-desc">Earth science, hazard, and geospatial datasets for analysis and planning.</p>
+    <div class="section-rule"></div>
+    <div class="cards">
+
+      <div class="card" data-category="data">
+        <div class="card-tag">Federal / Earth Science</div>
+        <h3>USGS Data & Maps</h3>
+        <p>Earth, water, biological, and mapping data from the United States Geological Survey. Geography and mapping resources, natural hazards data, water and flood information, plus educational programs like Data in Schools and Adventures in STEM.</p>
+        <div class="card-links">
+          <a href="https://www.usgs.gov/" target="_blank" class="card-link primary">USGS</a>
+          <a href="https://www.usgs.gov/products/maps" target="_blank" class="card-link">Maps</a>
+          <a href="https://www.usgs.gov/natural-hazards" target="_blank" class="card-link">Hazards</a>
+        </div>
+      </div>
+
+      <div class="card" data-category="data">
+        <div class="card-tag">CIA / Public Maps</div>
+        <h3>CIA Maps & Publications</h3>
+        <p>Publicly available maps and geographic publications from the Central Intelligence Agency. Useful reference materials for international disaster response and geographic context.</p>
+        <div class="card-links">
+          <a href="https://www.cia.gov/the-world-factbook/maps/" target="_blank" class="card-link primary">CIA Maps</a>
+        </div>
+      </div>
+
+      <div class="card" data-category="data">
+        <div class="card-tag">NGA / Historical</div>
+        <h3>Declassified Satellite Imagery</h3>
+        <p>Historical satellite imagery that has been declassified and made available to the public. Valuable for historical land use analysis, baseline comparisons, and understanding long-term environmental change.</p>
+        <div class="card-links">
+          <a href="https://www.usgs.gov/centers/eros/science/usgs-eros-archive-declassified-data" target="_blank" class="card-link primary">Declassified Archive</a>
+        </div>
+      </div>
+
+      <div class="card" data-category="data">
+        <div class="card-tag">Satellite / Remote Sensing</div>
+        <h3>AmericaView</h3>
+        <p>Consortium providing K-12 teacher resources and remote sensing datasets. Useful for understanding satellite imagery analysis techniques and accessing educational geospatial data.</p>
+        <div class="card-links">
+          <a href="https://americaview.org/" target="_blank" class="card-link primary">AmericaView</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Section 4: Education & Training -->
+  <div class="section" id="education">
+    <div class="section-header">
+      <span class="section-number">04</span>
+      <h2>Education & Training</h2>
+    </div>
+    <p class="section-desc">Learning platforms, certification programs, and educational resources for geospatial skills.</p>
+    <div class="section-rule"></div>
+    <div class="cards">
+
+      <div class="card" data-category="education">
+        <div class="card-tag">Training / CAP</div>
+        <h3>CAP Geospatial Training</h3>
+        <p>Training resources for CAP members in geospatial tools and techniques. Covers ArcGIS fundamentals and mission-specific mapping skills.</p>
+        <div class="card-links">
+          <a href="https://gis.cap.gov/pages/geospatialgis-training" target="_blank" class="card-link primary">Training Portal</a>
+        </div>
+      </div>
+
+      <div class="card" data-category="education">
+        <div class="card-tag">STEM / Youth</div>
+        <h3>CAP Geospatial STEM Hub</h3>
+        <p>Educational program introducing cadets to geospatial careers. Covers GIS concepts, hands-on mapping exercises, and career pathway exploration.</p>
+        <div class="card-links">
+          <a href="https://geospatial.stem.cap.gov/" target="_blank" class="card-link primary">STEM Hub</a>
+        </div>
+      </div>
+
+      <div class="card" data-category="education">
+        <div class="card-tag">Intelligence / K-12</div>
+        <h3>USGIF Education Resources</h3>
+        <p>US Geospatial Intelligence Foundation's K-12 Open Source Educational Resource Library. Introduces geospatial intelligence concepts to students and educators.</p>
+        <div class="card-links">
+          <a href="https://usgif.org/" target="_blank" class="card-link primary">USGIF</a>
+        </div>
+      </div>
+
+      <div class="card" data-category="education">
+        <div class="card-tag">Certification / NGA</div>
+        <h3>GEOINT Professional Certification</h3>
+        <p>Professional certification in geospatial intelligence from the National Geospatial-Intelligence Agency. Industry-recognized credential for GIS and GEOINT professionals.</p>
+        <div class="card-links">
+          <a href="https://usgif.org/professional-certifications/" target="_blank" class="card-link primary">Certification Info</a>
+        </div>
+      </div>
+
+      <div class="card" data-category="education">
+        <div class="card-tag">Storytelling / StoryMaps</div>
+        <h3>CAP Geospatial StoryMap</h3>
+        <p>Narrative introduction to CAP's geospatial program using Esri StoryMaps. A good example of how to present geospatial work to non-technical audiences.</p>
+        <div class="card-links">
+          <a href="https://storymaps.arcgis.com/stories/94643dee216744c4aabca606bbbc02a2" target="_blank" class="card-link primary">View StoryMap</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Section 5: Volunteer & Community -->
+  <div class="section" id="community">
+    <div class="section-header">
+      <span class="section-number">05</span>
+      <h2>Volunteer & Community</h2>
+    </div>
+    <p class="section-desc">Community mapping organizations and volunteer networks for humanitarian geospatial work.</p>
+    <div class="section-rule"></div>
+    <div class="cards">
+
+      <div class="card" data-category="volunteer">
+        <div class="card-tag">Youth / Mapping</div>
+        <h3>YouthMappers</h3>
+        <p>Academy and activity mapping platform for geospatial learning. University student-led chapters doing humanitarian mapping worldwide. Similar mission to Red Cross GIS volunteer work.</p>
+        <div class="card-links">
+          <a href="https://www.youthmappers.org/" target="_blank" class="card-link primary">YouthMappers</a>
+          <a href="https://www.youthmappers.org/academy" target="_blank" class="card-link">Academy</a>
+        </div>
+      </div>
+
+      <div class="card" data-category="volunteer education">
+        <div class="card-tag">Geography / Educators</div>
+        <h3>American Geographical Society</h3>
+        <p>Geography Educator Initiative and Teen Maptivists program. Connecting young people with geographic science and community mapping projects.</p>
+        <div class="card-links">
+          <a href="https://www.americangeo.org/" target="_blank" class="card-link primary">AGS</a>
+        </div>
+      </div>
+
+      <div class="card" data-category="volunteer education">
+        <div class="card-tag">Education / Global</div>
+        <h3>National Geographic Society</h3>
+        <p>Educational partnerships and resources for geographic exploration and understanding. Global reach and brand recognition for geographic education initiatives.</p>
+        <div class="card-links">
+          <a href="https://www.nationalgeographic.org/society/" target="_blank" class="card-link primary">NatGeo Society</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Section 6: Career Pathways -->
+  <div class="section" id="careers">
+    <div class="section-header">
+      <span class="section-number">06</span>
+      <h2>Career Pathways</h2>
+    </div>
+    <p class="section-desc">Degree programs, career guides, and job resources for geospatial professionals.</p>
+    <div class="section-rule"></div>
+    <div class="cards">
+
+      <div class="card" data-category="education">
+        <div class="card-tag">Degrees / Guide</div>
+        <h3>GIS Degree Guide</h3>
+        <p>Comprehensive guide to GIS degree programs, from certificates to PhDs. Helps prospective students find the right geospatial education path.</p>
+        <div class="card-links">
+          <a href="https://www.gisdegree.org/" target="_blank" class="card-link primary">Degree Guide</a>
+        </div>
+      </div>
+
+      <div class="card" data-category="education">
+        <div class="card-tag">Military / Academic</div>
+        <h3>USAFA Geospatial Science</h3>
+        <p>US Air Force Academy's geospatial science program. Academic program combining geography, remote sensing, and GIS with military applications.</p>
+        <div class="card-links">
+          <a href="https://www.usafa.edu/academic/geospatial-science/" target="_blank" class="card-link primary">USAFA Program</a>
+        </div>
+      </div>
+
+      <div class="card" data-category="education">
+        <div class="card-tag">Careers / Cartography</div>
+        <h3>Cartography Careers Guide</h3>
+        <p>Career overview for cartography and geographic information science from CaGIS. Covers job descriptions, salary ranges, and career progression.</p>
+        <div class="card-links">
+          <a href="https://www.cartogis.org/docs/cartogis_careers.pdf" target="_blank" class="card-link primary">Careers PDF</a>
+        </div>
+      </div>
+
+      <div class="card" data-category="education">
+        <div class="card-tag">Jobs / Space</div>
+        <h3>NASA Careers & EVONA Space Jobs</h3>
+        <p>Career opportunities at NASA and space industry positions through EVONA staffing. For GIS professionals interested in earth observation and space-based geospatial work.</p>
+        <div class="card-links">
+          <a href="https://www.nasa.gov/careers/" target="_blank" class="card-link">NASA Careers</a>
+          <a href="https://www.evona.com/spacejobs/" target="_blank" class="card-link">EVONA</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="container">
+    <p class="footer-text">GIS & Disaster Response Resource Directory &mdash; American Red Cross &mdash; Compiled from Civil Air Patrol Geospatial Hub partner resources. For internal reference.</p>
+  </div>
+</footer>
+
+<script>
+  // Filter functionality
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const cards = document.querySelectorAll('.card');
+  const searchBox = document.getElementById('searchBox');
+  const resourceCount = document.getElementById('resourceCount');
+
+  function updateCount() {
+    const visible = document.querySelectorAll('.card:not([style*="display: none"])').length;
+    resourceCount.textContent = visible;
+  }
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter = btn.dataset.filter;
+
+      cards.forEach(card => {
+        if (filter === 'all' || card.dataset.category.includes(filter)) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      // Re-apply search filter
+      const query = searchBox.value.toLowerCase();
+      if (query) applySearch(query);
+      updateCount();
+    });
+  });
+
+  function applySearch(query) {
+    cards.forEach(card => {
+      if (card.style.display === 'none') return; // already hidden by category
+      const text = card.textContent.toLowerCase();
+      if (!text.includes(query)) {
+        card.style.display = 'none';
+      }
+    });
+  }
+
+  searchBox.addEventListener('input', (e) => {
+    const query = e.target.value.toLowerCase();
+    // Reset category filter first
+    const activeFilter = document.querySelector('.filter-btn.active').dataset.filter;
+    cards.forEach(card => {
+      if (activeFilter === 'all' || card.dataset.category.includes(activeFilter)) {
+        card.style.display = '';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+    if (query) applySearch(query);
+    updateCount();
+  });
+</script>
+
+</body>
+</html>
